@@ -1,0 +1,8 @@
+migrations/
+migrations/*
+
+venv/
+venv/*
+
+__pycache__/
+__pycache__/*
