@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect
+from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, render_template_string
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
 from .models import *
@@ -13,6 +13,18 @@ class HelloTemplateView:
     def hello_world():
         content = request.args.get('content')
         return render_template('index.html', content=content)
+
+class QuizTemplateView:
+    quiz = Blueprint('quiz_t', __name__, url_prefix='/quiz')
+
+    @quiz.route('/', methods=['GET'])
+    def quiz_home():
+        content = request.args.get('content') or 'Hello Quiz'
+        template = ''' 
+        <p> Hello world </p>{}
+        '''.format(content)
+
+        return render_template_string(template)
 
 class UserTemplateView: # Router
     user = Blueprint('user_t', __name__, url_prefix='/user')

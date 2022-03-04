@@ -1,3 +1,5 @@
+{% autoescape false %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -21,6 +23,12 @@
 		<li class="nav-item active">
 			<a class="nav-link" href="/post">Post</a>
 		</li>
+		<li class="nav-item active">
+			<a class="nav-link" href="/quiz">Quiz</a>
+		</li>
+		<li class="nav-item active">
+			<a class="nav-link" href="/file">File</a>
+		</li>
 		</ul>
 		<div>
 		{% if session['username'] %}
@@ -38,3 +46,5 @@
 
 	</body>
 </html>
+
+{% endautoescape %}

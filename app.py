@@ -27,6 +27,7 @@ CORS(app)
 app.register_blueprint(HelloTemplateView().hello)
 app.register_blueprint(UserTemplateView().user)
 app.register_blueprint(PostTemplateView().post)
+app.register_blueprint(QuizTemplateView().quiz)
 
  
 if __name__ == "__main__":
