@@ -28,6 +28,7 @@ app.register_blueprint(HelloTemplateView().hello)
 app.register_blueprint(UserTemplateView().user)
 app.register_blueprint(PostTemplateView().post)
 app.register_blueprint(QuizTemplateView().quiz)
+app.register_blueprint(FileTemplateView().file)
 
  
 if __name__ == "__main__":

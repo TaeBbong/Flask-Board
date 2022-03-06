@@ -26,6 +26,13 @@ class QuizTemplateView:
 
         return render_template_string(template)
 
+class FileTemplateView:
+    file = Blueprint('file_t', __name__, url_prefix='/file')
+
+    @file.route('/', methods=['GET'])
+    def file_home():
+        return render_template("file_home.html")
+
 class UserTemplateView: # Router
     user = Blueprint('user_t', __name__, url_prefix='/user')
 
