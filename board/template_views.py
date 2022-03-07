@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, render_template_string
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
-from .models import *
+
 
 bcrypt = Bcrypt()
 jwt = JWTManager()

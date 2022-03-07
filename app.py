@@ -13,9 +13,11 @@ app.config['SECRET_KEY'] = 'mysecretkey'
 app.config["JWT_SECRET_KEY"] = "secret_key"
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://testdb:testdb@localhost:5432/testdb'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db.init_app(app)
+
+db = Sqlite3()
+
 bcrypt.init_app(app)
-migrate = Migrate(app, db)
+
 jwt.init_app(app)
 CORS(app)
 
