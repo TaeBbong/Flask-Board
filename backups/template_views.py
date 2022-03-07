@@ -2,9 +2,7 @@ from flask import Flask, Blueprint, request, jsonify, render_template, session, 
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
 
-from board.models import Sqlite3
 
-db = Sqlite3()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
@@ -49,13 +47,11 @@ class UserTemplateView: # Router
         elif request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            user = db.retrieve_user_by_username(username)
-            print(user)
-            if user != "404" and bcrypt.check_password_hash(user.password, password):
+            user = User.query.filter_by(username=username).first()
+            if user and bcrypt.check_password_hash(user.password, password):
                 session['id'] = user.id
                 session['username'] = username
-                # session['password'] = user.password (secure)
-                session['password'] = password # (vuln)
+                session['password'] = password
                 print(session)
                 return redirect('/post/')
             else:
@@ -76,8 +72,9 @@ class UserTemplateView: # Router
             confirm = request.form['confirm']
             if password == confirm:
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                db.create_user(username=username, password_hash=hashed_password)
-                user = db.retrieve_user_by_username(username)
+                user = User(username=username, password=hashed_password)
+                db.session.add(user)
+                db.session.commit()
                 session['id'] = user.id
                 session['username'] = username
                 session['password'] = password
@@ -91,38 +88,49 @@ class PostTemplateView:
 
     @post.route('/', methods=['GET'])
     def retrieve_posts():
-        all_posts = db.retrieve_posts()
+        all_posts = Post.query.all()
+        result = []
+        for post in all_posts:
+            post_data = post.serialize()
+            result.append(post_data)
         # return jsonify({'posts': result})
-        return render_template("post_list.html", posts=all_posts)
+        return render_template("post_list.html", posts=result)
 
     @post.route('/create', methods=['POST', 'GET'])
     def create_post():
         if request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
-            db.create_post(title=title, content=content, user_id=session['id']) # token
+            new_post = Post(title=title, description=content, user_id=session['id']) # token
+            db.session.add(new_post)
+            db.session.commit()
             return redirect('/post/')
         elif request.method == 'GET':
                 return render_template('post_create.html')
 
     @post.route('/<int:id>/', methods=['GET'])
     def retrieve_post(id):
-        post = db.retrieve_post_by_id(id)
+        post = Post.query.get_or_404(id)
         return render_template('post_detail.html', post=post)
 
     @post.route('/<int:id>/edit/', methods=['GET', 'POST'])
     def update_post(id):
         if request.method == 'GET':
-            post = db.retrieve_post_by_id(id)
+            post = Post.query.get_or_404(id)
             return render_template('post_edit.html', post=post)
         elif request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
-            db.update_post(id, title, content)
+            post = Post.query.get_or_404(id)
+            post.title = title
+            post.description = content
+            db.session.commit()
             return redirect('/post/')
 
     @post.route('/<int:id>/delete/', methods=['GET'])
     def delete_post(id):
         if request.method == 'GET':
-            db.delete_post(id)
+            post = Post.query.get_or_404(id)
+            db.session.delete(post)
+            db.session.commit()
             return redirect('/post/')
