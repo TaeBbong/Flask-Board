@@ -14,24 +14,24 @@ class HelloTemplateView:
         content = request.args.get('content')
         return render_template('index.html', content=content)
 
-# class QuizTemplateView:
-#     quiz = Blueprint('quiz_t', __name__, url_prefix='/quiz')
+class QuizTemplateView:
+    quiz = Blueprint('quiz_t', __name__, url_prefix='/quiz')
 
-#     @quiz.route('/', methods=['GET'])
-#     def quiz_home():
-#         content = request.args.get('content') or 'Hello Quiz'
-#         template = ''' 
-#         <p> Hello world </p>{}
-#         '''.format(content)
+    @quiz.route('/', methods=['GET'])
+    def quiz_home():
+        content = request.args.get('content') or 'Hello Quiz'
+        template = ''' 
+        <p> Hello world </p>{}
+        '''.format(content)
 
-#         return render_template_string(template)
+        return render_template_string(template)
 
-# class FileTemplateView:
-#     file = Blueprint('file_t', __name__, url_prefix='/file')
+class FileTemplateView:
+    file = Blueprint('file_t', __name__, url_prefix='/file')
 
-#     @file.route('/', methods=['GET'])
-#     def file_home():
-#         return render_template("file_home.html")
+    @file.route('/', methods=['GET'])
+    def file_home():
+        return render_template("file_home.html")
 
 class UserTemplateView: # Router
     user = Blueprint('user_t', __name__, url_prefix='/user')
