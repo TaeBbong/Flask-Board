@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from board.models import *
-from backups.views import *
 from board.template_views import *
 from flask_jwt_extended import JWTManager
 
