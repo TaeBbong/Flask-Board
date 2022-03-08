@@ -33,7 +33,7 @@ class FileTemplateView:
     def file_home():
         return render_template("file_home.html")
 
-class UserTemplateView: # Router
+class UserTemplateView:
     user = Blueprint('user_t', __name__, url_prefix='/user')
 
     @user.route('/', methods=['GET'])
@@ -99,7 +99,7 @@ class PostTemplateView:
                 user_id = session['id']
                 title = request.form['title']
                 content = request.form['content']
-                db.create_post(title=title, content=content, user_id=user_id) # token
+                db.create_post(title=title, content=content, user_id=user_id)
             except:
                 pass
             return redirect('/post/')
@@ -119,13 +119,7 @@ class PostTemplateView:
     def update_post(id):
         if request.method == 'GET':
             post = db.retrieve_post_by_id(id)
-            try:
-                if post.user_id == session['id']:
-                    return render_template('post_edit.html', post=post)
-                else:
-                    return redirect('/post/')
-            except:
-                return redirect('/post/')
+            return render_template('post_edit.html', post=post)
         elif request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
