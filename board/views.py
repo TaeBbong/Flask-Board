@@ -52,8 +52,7 @@ class UserTemplateView:
             if user != "404" and bcrypt.check_password_hash(user.password, password):
                 session['id'] = user.id
                 session['username'] = username
-                session['password'] = user.password # (secure)
-                #session['password'] = password # (vuln)
+                session['password'] = password
                 print(session)
                 return redirect('/post/')
             else:
