@@ -1,22 +1,18 @@
-from flask import Flask, render_template, request, jsonify, Blueprint
+from flask import Flask
 ## from flask_sqlalchemy import SQLAlchemy
 ## from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from board.models import *
 from board.template_views import *
-from flask_jwt_extended import JWTManager
 
 app = Flask (__name__, template_folder='board/templates')
 app.debug = True
 app.config['SECRET_KEY'] = 'mysecretkey'
-app.config["JWT_SECRET_KEY"] = "secret_key"
 ## app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://testdb:testdb@localhost:5432/testdb'
 ## app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 bcrypt.init_app(app)
-
-jwt.init_app(app)
 CORS(app)
 
 # app.register_blueprint(HelloView().hello)

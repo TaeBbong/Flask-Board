@@ -1,12 +1,10 @@
-from flask import Flask, Blueprint, request, jsonify, render_template, session, redirect, render_template_string
+from flask import Blueprint, request, render_template, session, redirect, render_template_string
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
 
 from board.models import Sqlite3
 
 db = Sqlite3()
 bcrypt = Bcrypt()
-jwt = JWTManager()
 
 class HelloTemplateView:
     hello = Blueprint('hello_t', __name__, url_prefix='/')
@@ -54,8 +52,8 @@ class UserTemplateView: # Router
             if user != "404" and bcrypt.check_password_hash(user.password, password):
                 session['id'] = user.id
                 session['username'] = username
-                # session['password'] = user.password (secure)
-                session['password'] = password # (vuln)
+                session['password'] = user.password # (secure)
+                #session['password'] = password # (vuln)
                 print(session)
                 return redirect('/post/')
             else:
@@ -92,7 +90,6 @@ class PostTemplateView:
     @post.route('/', methods=['GET'])
     def retrieve_posts():
         all_posts = db.retrieve_posts()
-        # return jsonify({'posts': result})
         return render_template("post_list.html", posts=all_posts)
 
     @post.route('/create', methods=['POST', 'GET'])
@@ -103,7 +100,11 @@ class PostTemplateView:
             db.create_post(title=title, content=content, user_id=session['id']) # token
             return redirect('/post/')
         elif request.method == 'GET':
+            try:
+                user_id = session['id']
                 return render_template('post_create.html')
+            except:
+                return redirect('/post/')
 
     @post.route('/<int:id>/', methods=['GET'])
     def retrieve_post(id):
