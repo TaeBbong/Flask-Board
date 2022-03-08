@@ -21,7 +21,7 @@ class QuizTemplateView:
     def quiz_home():
         content = request.args.get('content') or 'Hello Quiz'
         template = ''' 
-        <p> Hello world </p>{}
+        <p> Hello world from </p>{}
         '''.format(content)
 
         return render_template_string(template)
