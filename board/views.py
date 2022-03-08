@@ -29,9 +29,14 @@ class QuizTemplateView:
 class FileTemplateView:
     file = Blueprint('file_t', __name__, url_prefix='/file')
 
-    @file.route('/', methods=['GET'])
-    def file_home():
-        return render_template("file_home.html")
+    @file.route('/', methods = ['GET', 'POST'])
+    def upload_file():
+        if request.method == 'POST':
+            f = request.files['file']
+            f.save("./uploads/" + f.filename)
+            return render_template("file_success.html")
+        else:
+            return render_template("file_home.html")
 
 class UserTemplateView:
     user = Blueprint('user_t', __name__, url_prefix='/user')
