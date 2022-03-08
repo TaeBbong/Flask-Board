@@ -95,9 +95,13 @@ class PostTemplateView:
     @post.route('/create', methods=['POST', 'GET'])
     def create_post():
         if request.method == 'POST':
-            title = request.form['title']
-            content = request.form['content']
-            db.create_post(title=title, content=content, user_id=session['id']) # token
+            try:
+                user_id = session['id']
+                title = request.form['title']
+                content = request.form['content']
+                db.create_post(title=title, content=content, user_id=user_id) # token
+            except:
+                pass
             return redirect('/post/')
         elif request.method == 'GET':
             try:
@@ -115,7 +119,13 @@ class PostTemplateView:
     def update_post(id):
         if request.method == 'GET':
             post = db.retrieve_post_by_id(id)
-            return render_template('post_edit.html', post=post)
+            try:
+                if post.user_id == session['id']:
+                    return render_template('post_edit.html', post=post)
+                else:
+                    return redirect('/post/')
+            except:
+                return redirect('/post/')
         elif request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
@@ -125,5 +135,12 @@ class PostTemplateView:
     @post.route('/<int:id>/delete/', methods=['GET'])
     def delete_post(id):
         if request.method == 'GET':
-            db.delete_post(id)
-            return redirect('/post/')
+            post = db.retrieve_post_by_id(id)
+            try:
+                if post.user_id == session['id']:
+                    db.delete_post(id)
+                else:
+                    pass
+            except:
+                pass
+        return redirect('/post/')

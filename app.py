@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from board.models import *
-from board.template_views import *
+from board.views import *
 
 app = Flask (__name__, template_folder='board/templates')
 app.debug = True
